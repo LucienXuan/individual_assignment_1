@@ -52,16 +52,16 @@ src-election-portal/
 ```
 
 ## Sample Screenshots of Output
-Add your own screenshots after running the system:
+The screenshots below are stored in the images folder:
 
 ### Login Page
-![Login Page](screenshots/login.png)
+![Login Page](images/login.png)
 
 ### Admin Dashboard
-![Admin Dashboard](screenshots/admin.png)
+![Admin Dashboard](images/screenshots/admin1.png)
 
 ### Student Dashboard
-![Student Dashboard](screenshots/student.png)
+![Student Dashboard](images/screenshots/student-before1.png)
 
 ## Notes
 - Do not push `node_modules`, `.env` or `school.db` to GitHub.

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Student Dashboard</title>
+ <style>
+  body {
+   margin: 0;
+   font-family: Arial, sans-serif;
+   background: #f5f7fb;
+   color: #172033;
+  }
+  .topbar {
+   background: white;
+   border-bottom: 1px solid #e2e6ef;
+   padding: 18px 34px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+  }
+  .brand {
+   display: flex;
+   align-items: center;
+   gap: 14px;
+  }
+  .brand img {
+   width: 70px;
+  }
+  .brand h1 {
+   margin: 0;
+   font-size: 24px;
+  }
+  .brand p {
+   margin: 3px 0 0 0;
+   color: #657085;
+  }
+  .logout {
+   color: white;
+   background: #8c1d2c;
+   padding: 10px 16px;
+   border-radius: 10px;
+   text-decoration: none;
+   font-weight: bold;
+  }
+  .container {
+   padding: 30px 34px;
+   max-width: 1150px;
+   margin: auto;
+  }
+  .welcome {
+   background: #213d66;
+   color: white;
+   padding: 22px;
+   border-radius: 18px;
+   margin-bottom: 22px;
+  }
+  .welcome h2 {
+   margin: 0 0 7px 0;
+  }
+  .welcome p {
+   margin: 0;
+  }
+  .message {
+   background: #e7f7ea;
+   color: #236b32;
+   border-left: 4px solid #236b32;
+   padding: 13px;
+   border-radius: 9px;
+   margin-bottom: 22px;
+  }
+  .section {
+   background: white;
+   border: 1px solid #e2e6ef;
+   border-radius: 16px;
+   padding: 22px;
+   margin-bottom: 22px;
+  }
+  h3 {
+   margin-top: 0;
+  }
+  .cards {
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   gap: 18px;
+  }
+  .candidate-card {
+   border: 1px solid #e2e6ef;
+   border-radius: 16px;
+   padding: 18px;
+   background: #fbfcff;
+  }
+  .candidate-card img {
+   width: 76px;
+   height: 76px;
+   border-radius: 50%;
+   display: block;
+   margin-bottom: 12px;
+  }
+  .candidate-card h4 {
+   margin: 0 0 8px 0;
+   font-size: 17px;
+  }
+  .manifesto {
+   color: #657085;
+   line-height: 1.5;
+   min-height: 95px;
+  }
+  button {
+   width: 100%;
+   background: #213d66;
+   color: white;
+   border: none;
+   padding: 12px;
+   border-radius: 10px;
+   font-weight: bold;
+   cursor: pointer;
+  }
+  .submitted {
+   width: 100%;
+   background: #e5e9f0;
+   color: #657085;
+   border: none;
+   padding: 12px;
+   border-radius: 10px;
+   font-weight: bold;
+   text-align: center;
+   box-sizing: border-box;
+  }
+  .small {
+   color: #657085;
+   font-size: 13px;
+  }
+  @media (max-width: 900px) {
+   .cards {
+    grid-template-columns: 1fr;
+   }
+  }
+ </style>
+</head>
+<body>
+ <div class="topbar">
+  <div class="brand">
+   <img src="/logo.png" alt="MILA University Logo">
+   <div>
+    <h1>Student Dashboard</h1>
+    <p>SRC Election Voting</p>
+   </div>
+  </div>
+  <a href="/logout" class="logout">Logout</a>
+ </div>
+
+ <div class="container">
+  <div class="welcome">
+   <h2>Welcome, <%= voter ? voter.name : username %>!</h2>
+   <p>Please view the candidates and submit your vote. You can vote once for each position only.</p>
+  </div>
+
+  <% if (message) { %>
+   <div class="message"><%= message %></div>
+  <% } %>
+
+  <% data.positions.forEach(position => { %>
+   <div class="section">
+    <h3><%= position.title %></h3>
+    <% if (votedPositionIds.indexOf(position.id) === -1) { %>
+     <p class="small">Please choose one candidate for this position.</p>
+    <% } else { %>
+     <p class="small">Vote submitted for this position.</p>
+    <% } %>
+
+    <div class="cards">
+     <% position.candidates.forEach(candidate => { %>
+      <div class="candidate-card">
+       <img src="<%= candidate.photo %>" alt="Candidate profile image">
+       <h4><%= candidate.name %></h4>
+       <p class="manifesto"><%= candidate.manifesto %></p>
+
+       <% if (votedPositionIds.indexOf(position.id) === -1) { %>
+        <form action="/vote" method="POST">
+         <input type="hidden" name="positionId" value="<%= position.id %>">
+         <input type="hidden" name="candidateId" value="<%= candidate.id %>">
+         <button type="submit" onclick="return confirm('Confirm your vote for <%= candidate.name %>?');">Vote</button>
+        </form>
+       <% } else { %>
+        <div class="submitted">Vote submitted</div>
+       <% } %>
+      </div>
+     <% }) %>
+    </div>
+   </div>
+  <% }) %>
+ </div>
+</body>
+</html>

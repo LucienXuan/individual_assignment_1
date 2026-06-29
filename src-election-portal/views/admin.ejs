@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Admin Dashboard</title>
+ <style>
+  body {
+   margin: 0;
+   font-family: Arial, sans-serif;
+   background: #f5f7fb;
+   color: #172033;
+  }
+  .topbar {
+   background: white;
+   border-bottom: 1px solid #e2e6ef;
+   padding: 18px 34px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+  }
+  .brand {
+   display: flex;
+   align-items: center;
+   gap: 14px;
+  }
+  .brand img {
+   width: 70px;
+  }
+  .brand h1 {
+   margin: 0;
+   font-size: 24px;
+  }
+  .brand p {
+   margin: 3px 0 0 0;
+   color: #657085;
+  }
+  .logout {
+   color: white;
+   background: #8c1d2c;
+   padding: 10px 16px;
+   border-radius: 10px;
+   text-decoration: none;
+   font-weight: bold;
+  }
+  .container {
+   padding: 30px 34px;
+   max-width: 1150px;
+   margin: auto;
+  }
+  .welcome {
+   background: #213d66;
+   color: white;
+   padding: 22px;
+   border-radius: 18px;
+   margin-bottom: 22px;
+  }
+  .welcome h2 {
+   margin: 0 0 7px 0;
+  }
+  .welcome p {
+   margin: 0;
+  }
+  .stats {
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   gap: 18px;
+   margin-bottom: 22px;
+  }
+  .stat-card {
+   background: white;
+   border: 1px solid #e2e6ef;
+   border-radius: 16px;
+   padding: 22px;
+   text-align: center;
+  }
+  .number {
+   font-size: 34px;
+   font-weight: bold;
+   color: #213d66;
+  }
+  .label {
+   margin-top: 7px;
+   color: #657085;
+   font-size: 12px;
+   letter-spacing: 1px;
+   text-transform: uppercase;
+  }
+  .section {
+   background: white;
+   border: 1px solid #e2e6ef;
+   border-radius: 16px;
+   padding: 22px;
+   margin-bottom: 22px;
+  }
+  h3 {
+   margin-top: 0;
+  }
+  .leader {
+   display: flex;
+   justify-content: space-between;
+   gap: 14px;
+   background: #f8fafc;
+   padding: 15px;
+   border-radius: 12px;
+   margin-bottom: 10px;
+  }
+  .result-row {
+   display: grid;
+   grid-template-columns: 170px 1fr 70px;
+   align-items: center;
+   gap: 13px;
+   padding: 12px 0;
+   border-bottom: 1px solid #eef2f7;
+  }
+  .bar-bg {
+   height: 13px;
+   background: #eef2f7;
+   border-radius: 50px;
+   overflow: hidden;
+  }
+  .bar {
+   height: 13px;
+   background: #213d66;
+  }
+  .vote-text {
+   text-align: right;
+   font-weight: bold;
+  }
+  .small {
+   color: #657085;
+   font-size: 13px;
+  }
+  @media (max-width: 800px) {
+   .stats {
+    grid-template-columns: 1fr;
+   }
+   .result-row {
+    grid-template-columns: 1fr;
+   }
+  }
+ </style>
+</head>
+<body>
+ <div class="topbar">
+  <div class="brand">
+   <img src="/logo.png" alt="MILA University Logo">
+   <div>
+    <h1>Admin Dashboard</h1>
+    <p>SRC Election Results</p>
+   </div>
+  </div>
+  <a href="/logout" class="logout">Logout</a>
+ </div>
+
+ <div class="container">
+  <div class="welcome">
+   <h2>Welcome, <%= username %>!</h2>
+   <p>You are viewing the live election results for all SRC positions.</p>
+  </div>
+
+  <div class="stats">
+   <div class="stat-card">
+    <div class="number"><%= data.totalStudents %></div>
+    <div class="label">Total Students</div>
+   </div>
+   <div class="stat-card">
+    <div class="number"><%= data.votesCast %></div>
+    <div class="label">Students Voted</div>
+   </div>
+   <div class="stat-card">
+    <div class="number"><%= data.participation %>%</div>
+    <div class="label">Participation</div>
+   </div>
+  </div>
+
+  <div class="section">
+   <h3>Leading Candidates</h3>
+   <% data.positions.forEach(position => { %>
+    <div class="leader">
+     <div>
+      <strong><%= position.title %></strong><br>
+      <span class="small"><%= position.leadingCandidate ? position.leadingCandidate.name : 'No candidate yet' %></span>
+     </div>
+     <div>
+      <strong><%= position.leadingCandidate ? position.leadingCandidate.voteCount : 0 %></strong>
+      <span class="small"> votes</span>
+     </div>
+    </div>
+   <% }) %>
+  </div>
+
+  <% data.positions.forEach(position => { %>
+   <div class="section">
+    <h3><%= position.title %> Results</h3>
+    <p class="small">Total votes for this position: <%= position.totalVotes %></p>
+
+    <% position.candidates.forEach(candidate => { %>
+     <div class="result-row">
+      <div><strong><%= candidate.name %></strong><br><span class="small"><%= candidate.percent %>%</span></div>
+      <div class="bar-bg"><div class="bar" style="width:<%= candidate.percent %>%;"></div></div>
+      <div class="vote-text"><%= candidate.voteCount %></div>
+     </div>
+    <% }) %>
+   </div>
+  <% }) %>
+ </div>
+</body>
+</html>

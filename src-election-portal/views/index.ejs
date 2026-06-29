@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>MILA SRC Election Portal</title>
+ <style>
+  body {
+   margin: 0;
+   font-family: Arial, sans-serif;
+   background: #f5f7fb;
+   color: #172033;
+  }
+  .page {
+   min-height: 100vh;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   padding: 30px;
+  }
+  .login-card {
+   width: 390px;
+   background: white;
+   border: 1px solid #e2e6ef;
+   border-radius: 18px;
+   box-shadow: 0 10px 30px rgba(20, 35, 65, 0.10);
+   padding: 34px;
+  }
+  .logo {
+   display: block;
+   width: 175px;
+   margin: 0 auto 18px auto;
+  }
+  h1 {
+   font-size: 24px;
+   text-align: center;
+   margin: 10px 0 6px 0;
+  }
+  .subtitle {
+   text-align: center;
+   color: #657085;
+   margin-bottom: 26px;
+   line-height: 1.5;
+  }
+  label {
+   font-weight: bold;
+   display: block;
+   margin-bottom: 7px;
+  }
+  input {
+   width: 100%;
+   padding: 12px;
+   border: 1px solid #cfd6e4;
+   border-radius: 10px;
+   margin-bottom: 16px;
+   box-sizing: border-box;
+  }
+  button {
+   width: 100%;
+   background: #213d66;
+   color: white;
+   border: none;
+   padding: 13px;
+   border-radius: 10px;
+   font-weight: bold;
+   cursor: pointer;
+  }
+  .error {
+   background: #ffe8e8;
+   color: #9a1f1f;
+   border-left: 4px solid #9a1f1f;
+   padding: 11px;
+   margin-bottom: 16px;
+   border-radius: 8px;
+  }
+  .hint {
+   margin-top: 18px;
+   font-size: 13px;
+   color: #657085;
+   line-height: 1.5;
+  }
+  a {
+   color: #213d66;
+   text-decoration: none;
+   font-weight: bold;
+  }
+ </style>
+</head>
+<body>
+ <div class="page">
+  <div class="login-card">
+   <img src="/logo.png" class="logo" alt="MILA University Logo">
+   <h1>SRC Election Portal</h1>
+   <p class="subtitle">Secure voting system for MILA University Student Representative Council.</p>
+
+   <% if (locals.error) { %>
+    <div class="error"><%= error %></div>
+   <% } %>
+
+   <form action="/login" method="POST">
+    <label>Username</label>
+    <input type="text" name="username" required>
+
+    <label>Password</label>
+    <input type="password" name="password" required>
+
+    <button type="submit">Login</button>
+   </form>
+
+   <p class="hint">
+    Demo accounts: admin / pass123, s1001 / pass123, s1002 / pass123.<br>
+    <a href="/about">About</a> | <a href="/rules">Voting Rules</a>
+   </p>
+  </div>
+ </div>
+</body>
+</html>

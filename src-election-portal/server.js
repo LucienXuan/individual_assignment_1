@@ -1,4 +1,6 @@
 require('dotenv').config();
+const fs = require('fs');
+const path = require('path');
 const express = require('express');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
@@ -9,6 +11,7 @@ const PORT = 3000;
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use(session({
  secret: process.env.SESSION_SECRET,
@@ -17,7 +20,15 @@ app.use(session({
 }));
 
 app.get('/logo.png', (req, res) => {
- res.sendFile(__dirname + '/logo.png');
+ res.sendFile(path.join(__dirname, 'logo.png'));
+});
+
+app.get('/secondary-logo.png', (req, res) => {
+ const filePath = path.join(__dirname, 'secondary-logo.png');
+ if (fs.existsSync(filePath)) {
+  return res.sendFile(filePath);
+ }
+ res.sendFile(path.join(__dirname, 'logo.png'));
 });
 
 function redirectByRole(req, res) {
@@ -210,6 +221,7 @@ app.get('/student', requireStudent, (req, res) => {
 });
 
 app.post('/vote', requireStudent, (req, res) => {
+ console.log(`[DEBUG:${process.pid}] /vote route invoked`);
  const voterId = req.session.voter_id;
  const positionId = req.body.positionId;
  const candidateId = req.body.candidateId;
@@ -233,7 +245,7 @@ app.post('/vote', requireStudent, (req, res) => {
      return console.error(err.message);
     }
 
-    console.log(`[SYSTEM] '${req.session.username}' voted for candidate ID: ${candidateId} in position ID: ${positionId}`);
+    console.log(`[SYSTEM:${process.pid}] '${req.session.username}' cast a vote for position ID: ${positionId}`);
     res.redirect('/student?success=1');
    });
   });
@@ -248,6 +260,27 @@ app.use((req, res) => {
  }
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
  console.log(`Server is successfully running on port ${PORT}`);
+});
+
+server.on('error', (err) => {
+ console.error('[SERVER] listen error:', err && err.message ? err.message : err);
+ if (err && err.code === 'EADDRINUSE') {
+  const altPort = (process.env.PORT ? parseInt(process.env.PORT, 10) : PORT) + 1;
+  console.warn(`[SERVER] Port ${PORT} already in use. Attempting fallback port ${altPort}...`);
+  app.listen(altPort, () => {
+   console.log(`Server is running on fallback port ${altPort}`);
+  });
+ } else {
+  process.exit(1);
+ }
+});
+
+process.on('uncaughtException', (err) => {
+ console.error('[PROCESS] uncaughtException:', err && err.stack ? err.stack : err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+ console.error('[PROCESS] unhandledRejection at:', promise, 'reason:', reason);
 });

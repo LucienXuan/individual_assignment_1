@@ -3,40 +3,93 @@
 <head>
  <title>MILA SRC Election Portal</title>
  <style>
+  :root {
+   --primary: #213d66;
+   --secondary: #8c1d2c;
+   --accent: #f4d78b;
+   --muted: #657085;
+   --surface: rgba(255, 255, 255, 0.84);
+  }
   body {
    margin: 0;
    font-family: Arial, sans-serif;
-   background: #f5f7fb;
+   background: linear-gradient(180deg, rgba(33,61,102,0.78), rgba(140,29,44,0.72)), url('/images/mila-uni.webp') center/cover no-repeat fixed;
    color: #172033;
   }
   .page {
    min-height: 100vh;
-   display: flex;
-   align-items: center;
-   justify-content: center;
+   display: grid;
+   place-items: center;
    padding: 30px;
   }
-  .login-card {
-   width: 390px;
-   background: white;
-   border: 1px solid #e2e6ef;
-   border-radius: 18px;
-   box-shadow: 0 10px 30px rgba(20, 35, 65, 0.10);
-   padding: 34px;
+  .layout {
+   width: 100%;
+   max-width: 1100px;
+   display: grid;
+   grid-template-columns: minmax(280px, 1fr) 420px;
+   gap: 30px;
   }
-  .logo {
-   display: block;
-   width: 175px;
+  .info-card,
+  .login-card {
+   background: var(--surface);
+   border: 1px solid rgba(255, 255, 255, 0.65);
+   border-radius: 24px;
+   box-shadow: 0 24px 50px rgba(20, 35, 65, 0.18);
+   padding: 34px;
+   backdrop-filter: blur(18px);
+  }
+  .info-card {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   text-align: center;
+  }
+  .logo-row {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 18px;
+   flex-wrap: wrap;
+   margin-bottom: 24px;
+  }
+  .logo-row img {
+   max-height: 100px;
+   width: auto;
+  }
+  .secondary-logo {
+   max-height: 100px;
+  }
+  .hero-heading {
+   font-size: 34px;
+   margin: 0 0 18px 0;
+   color: var(--primary);
+  }
+  .intro {
+   max-width: 420px;
+   color: #283650;
+   line-height: 1.75;
    margin: 0 auto 18px auto;
+  }
+  .slogan {
+   margin: 20px 0 0 0;
+   font-weight: bold;
+   color: var(--secondary);
+   font-size: 18px;
+  }
+  .login-card {
+   width: 100%;
+   max-width: 420px;
   }
   h1 {
    font-size: 24px;
-   text-align: center;
    margin: 10px 0 6px 0;
+   text-align: left;
+   color: var(--primary);
   }
   .subtitle {
-   text-align: center;
-   color: #657085;
+   text-align: left;
+   color: var(--muted);
    margin-bottom: 26px;
    line-height: 1.5;
   }
@@ -48,14 +101,20 @@
   input {
    width: 100%;
    padding: 12px;
-   border: 1px solid #cfd6e4;
+   border: 1px solid rgba(33, 61, 102, 0.18);
    border-radius: 10px;
    margin-bottom: 16px;
    box-sizing: border-box;
+   background: rgba(255,255,255,0.95);
+  }
+  input:focus {
+   outline: none;
+   border-color: var(--secondary);
+   box-shadow: 0 0 0 3px rgba(140, 29, 44, 0.12);
   }
   button {
    width: 100%;
-   background: #213d66;
+   background: var(--secondary);
    color: white;
    border: none;
    padding: 13px;
@@ -74,28 +133,43 @@
   .hint {
    margin-top: 18px;
    font-size: 13px;
-   color: #657085;
+   color: var(--muted);
    line-height: 1.5;
   }
   a {
-   color: #213d66;
+   color: var(--secondary);
    text-decoration: none;
    font-weight: bold;
+  }
+  @media (max-width: 900px) {
+   .layout {
+    grid-template-columns: 1fr;
+   }
   }
  </style>
 </head>
 <body>
  <div class="page">
-  <div class="login-card">
-   <img src="/logo.png" class="logo" alt="MILA University Logo">
-   <h1>SRC Election Portal</h1>
-   <p class="subtitle">Secure voting system for MILA University Student Representative Council.</p>
+  <div class="layout">
+   <div class="info-card">
+    <div class="logo-row">
+     <img src="/images/logo.png" alt="MILA University Logo">
+     <img src="/images/SRC-logo-1.png" alt="SRC Logo">
+    </div>
+    <h1 class="hero-heading">MILA SRC Election Portal</h1>
+    <p class="intro">This portal is secure and totally anonymous. Your identity is protected while your voice is counted.</p>
+    <p class="slogan">Your Vote, Your Voice, Your Future</p>
+   </div>
 
-   <% if (locals.error) { %>
-    <div class="error"><%= error %></div>
-   <% } %>
+   <div class="login-card">
+    <h1>Login</h1>
+    <p class="subtitle">Enter your credentials to access the voting portal.</p>
 
-   <form action="/login" method="POST">
+    <% if (locals.error) { %>
+     <div class="error"><%= error %></div>
+    <% } %>
+
+    <form action="/login" method="POST">
     <label>Username</label>
     <input type="text" name="username" required>
 
